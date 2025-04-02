@@ -71,7 +71,7 @@ app.put('/v1/cache/:hash', async (c) => {
         }),
       );
       return c.json({ error: 'Cache entry already exists' }, 409);
-    } catch (error: unknown) {
+    } catch (_error: unknown) {
       // Object doesn't exist, proceed with upload
     }
 
