@@ -58,7 +58,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ikatsuba/nx-cache-server
+            IKatsuba/nx-cache-server
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -71,7 +71,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: IKatsuba
+          username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
         uses: docker/build-push-action@v6
