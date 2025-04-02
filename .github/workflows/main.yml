@@ -51,6 +51,12 @@ jobs:
     needs:
       - e2e
       - checks
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ikatsuba/nx-cache-server
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
       - name: Docker meta
@@ -58,7 +64,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            IKatsuba/nx-cache-server
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -70,7 +76,7 @@ jobs:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
