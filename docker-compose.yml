@@ -17,7 +17,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
-  create-bucket-and-user:
+  create_bucket_and_user:
     image: minio/mc
     entrypoint: sh -c "mc config host add minio http://s3:9000 minio minio123 && mc mb minio/nx-cloud && mc anonymous set public minio/nx-cloud"
     depends_on:
