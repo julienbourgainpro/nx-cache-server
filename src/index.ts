@@ -139,5 +139,6 @@ if (import.meta.main) {
       AWS_ACCESS_KEY_ID: Deno.env.get('AWS_ACCESS_KEY_ID'),
       AWS_SECRET_ACCESS_KEY: Deno.env.get('AWS_SECRET_ACCESS_KEY'),
       S3_BUCKET_NAME: Deno.env.get('S3_BUCKET_NAME') || 'nx-cloud',
+      S3_ENDPOINT_URL: Deno.env.get('S3_ENDPOINT_URL'),
     }));
 }
