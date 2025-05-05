@@ -1,4 +1,4 @@
-import { assertEquals, assertExists } from 'jsr:@std/assert';
+import { assertEquals, assertExists } from '@std/assert';
 import { app } from './index.ts';
 
 async function makeRequest(
@@ -37,8 +37,8 @@ Deno.test('PUT /v1/cache/{hash} - Success', async () => {
   );
 
   assertEquals(response.status, 202);
-  const body = await response.json();
-  assertEquals(body.message, 'Successfully uploaded');
+  const body = await response.text();
+  assertEquals(body, 'Successfully uploaded');
 });
 
 Deno.test('PUT /v1/cache/{hash} - Unauthorized', async () => {
@@ -55,8 +55,8 @@ Deno.test('PUT /v1/cache/{hash} - Unauthorized', async () => {
   );
 
   assertEquals(response.status, 403);
-  const body = await response.json();
-  assertEquals(body.error, 'Unauthorized');
+  const body = await response.text();
+  assertEquals(body, 'Access forbidden');
 });
 
 Deno.test('GET /v1/cache/{hash} - Success', async () => {
@@ -85,8 +85,8 @@ Deno.test('GET /v1/cache/{hash} - Unauthorized', async () => {
   );
 
   assertEquals(response.status, 403);
-  const body = await response.json();
-  assertEquals(body.error, 'Unauthorized');
+  const body = await response.text();
+  assertEquals(body, 'Access forbidden');
 });
 
 Deno.test('GET /v1/cache/{hash} - Not Found', async () => {
@@ -95,6 +95,6 @@ Deno.test('GET /v1/cache/{hash} - Not Found', async () => {
   const response = await makeRequest('GET', `/v1/cache/${hash}`);
 
   assertEquals(response.status, 404);
-  const body = await response.json();
-  assertEquals(body.error, 'Not Found');
+  const body = await response.text();
+  assertEquals(body, 'The record was not found');
 });
