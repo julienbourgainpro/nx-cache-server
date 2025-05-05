@@ -1,13 +1,14 @@
 # Nx Custom Self-Hosted Remote Cache Server
 
 A Deno-based server implementation of the Nx Custom Self-Hosted Remote Cache
-specification ([RFC](https://github.com/nrwl/nx/discussions/30548)). This server
-provides a caching layer for Nx build outputs using Amazon S3 as the storage
-backend.
+specification. This server provides a caching layer for Nx build outputs using
+Amazon S3 as the storage backend.
 
-> **Note:** This is a work in progress and the API is not yet stable. Finalizing
-> the API will be done then the
-> [RFC](https://github.com/nrwl/nx/discussions/30548) is accepted.
+## Overview
+
+This server implements the
+[Nx Custom Remote Cache OpenAPI specification](https://nx.dev/recipes/running-tasks/self-hosted-caching#build-your-own-caching-server)
+and provides a production-ready solution for self-hosting your Nx remote cache.
 
 ## Features
 
@@ -15,6 +16,7 @@ backend.
 - Uses Amazon S3 for storage
 - Secure authentication using Bearer tokens
 - Efficient file streaming
+- Production-ready implementation
 
 ## Prerequisites
 
@@ -64,11 +66,26 @@ Run the tests with:
 
 ```bash
 deno task test
+deno task e2e
 ```
 
 > **Note:** The tests assume that the MinIO server is running and that the
-> `nx-cloud` bucket exists. Be sure to run `docker compose up -d` before running
-> the tests.
+> `nx-cloud` bucket exists. Be sure to run
+> `docker compose -f docker-compose.e2e.yml up -d` before running the tests.
+
+## Usage with Nx
+
+To use this cache server with your Nx workspace, set the following environment
+variables:
+
+```bash
+NX_SELF_HOSTED_REMOTE_CACHE_SERVER=http://your-server:3000
+NX_SELF_HOSTED_REMOTE_CACHE_ACCESS_TOKEN=your-secure-token
+```
+
+## Author
+
+- [Igor Katsuba](https://x.com/katsuba_igor)
 
 ## License
 
