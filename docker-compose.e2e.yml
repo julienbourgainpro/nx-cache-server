@@ -4,7 +4,7 @@ services:
       file: docker-compose.yml
       service: s3
     ports:
-      
+
   create_bucket_and_user:
     extends:
       file: docker-compose.yml
