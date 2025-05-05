@@ -1,0 +1,25 @@
+services:
+  s3:
+    extends:
+      file: docker-compose.yml
+      service: s3
+    ports:
+
+  create_bucket_and_user:
+    extends:
+      file: docker-compose.yml
+      service: create_bucket_and_user
+
+  cache_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      - S3_ENDPOINT_URL=http://s3:9000
+    env_file:
+      - .env.local
+
+volumes:
+  s3_data:

@@ -4,6 +4,7 @@ import { logger } from 'hono/logger';
 
 import {
   GetObjectCommand,
+  HeadObjectCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -44,13 +45,19 @@ const auth = () =>
   createMiddleware(async (c, next) => {
     const authHeader = c.req.header('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return c.json({ error: 'Unauthorized' }, 403);
+      return new Response('Unauthorized', {
+        status: 401,
+        headers: { 'Content-Type': 'text/plain' },
+      });
     }
 
     const token = authHeader.split(' ')[1];
 
     if (token !== c.env.NX_CACHE_ACCESS_TOKEN) {
-      return c.json({ error: 'Unauthorized' }, 403);
+      return new Response('Access forbidden', {
+        status: 403,
+        headers: { 'Content-Type': 'text/plain' },
+      });
     }
 
     await next();
@@ -65,14 +72,26 @@ app.put('/v1/cache/:hash', async (c) => {
 
     try {
       await c.get('s3').send(
-        new GetObjectCommand({
+        new HeadObjectCommand({
           Bucket: c.env.S3_BUCKET_NAME,
           Key: hash,
         }),
       );
-      return c.json({ error: 'Cache entry already exists' }, 409);
-    } catch (_error: unknown) {
-      // Object doesn't exist, proceed with upload
+
+      return new Response('Cannot override an existing record', {
+        status: 409,
+        headers: { 'Content-Type': 'text/plain' },
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === 'NotFound') {
+        // Do nothing
+      } else {
+        console.error('Upload error:', error);
+        return new Response('Internal server error', {
+          status: 500,
+          headers: { 'Content-Type': 'text/plain' },
+        });
+      }
     }
 
     const body = await c.req.arrayBuffer();
@@ -85,10 +104,16 @@ app.put('/v1/cache/:hash', async (c) => {
       }),
     );
 
-    return c.json({ message: 'Successfully uploaded' }, 202);
+    return new Response('Successfully uploaded', {
+      status: 202,
+      headers: { 'Content-Type': 'text/plain' },
+    });
   } catch (error: unknown) {
     console.error('Upload error:', error);
-    return c.json({ error: 'Internal server error' }, 500);
+    return new Response('Internal server error', {
+      status: 500,
+      headers: { 'Content-Type': 'text/plain' },
+    });
   }
 });
 
@@ -112,19 +137,32 @@ app.get('/v1/cache/:hash', async (c) => {
 
       await response.body?.cancel();
 
-      return Response.json(
-        { error: response.statusText },
-        { status: response.status },
-      );
+      if (response.status === 404) {
+        return new Response('The record was not found', {
+          status: 404,
+          headers: { 'Content-Type': 'text/plain' },
+        });
+      }
+
+      return new Response('Access forbidden', {
+        status: 403,
+        headers: { 'Content-Type': 'text/plain' },
+      });
     }
 
     return response;
   } catch (error: unknown) {
     if (error instanceof Error && error.name === 'NoSuchKey') {
-      return c.json({ error: 'Not Found' }, 404);
+      return new Response('The record was not found', {
+        status: 404,
+        headers: { 'Content-Type': 'text/plain' },
+      });
     }
     console.error('Download error:', error);
-    return c.json({ error: 'Internal server error' }, 500);
+    return new Response('Internal server error', {
+      status: 500,
+      headers: { 'Content-Type': 'text/plain' },
+    });
   }
 });
 
