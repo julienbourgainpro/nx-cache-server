@@ -38,11 +38,12 @@ jobs:
           deno-version: v2.2.6
       - name: Run MinIO
         run: |
-          docker compose up -d
+          docker compose up -d -f docker-compose.e2e.yml
           deno --no-lock -A npm:wait-on http://localhost:9000/minio/health/live
       - name: Run tests
         run: |
           deno task test
+          deno task e2e
       - name: Run MinIO down
         run: |
           docker compose down
