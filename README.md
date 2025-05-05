@@ -17,6 +17,7 @@ and provides a production-ready solution for self-hosting your Nx remote cache.
 - Secure authentication using Bearer tokens
 - Efficient file streaming
 - Production-ready implementation
+- Available as a Docker image
 
 ## Prerequisites
 
@@ -38,6 +39,24 @@ PORT=3000  # Optional, defaults to 3000
 ```
 
 ## Installation
+
+### Using Docker
+
+The easiest way to run the server is using the official Docker image:
+
+```bash
+docker pull ghcr.io/ikatsuba/nx-cache-server:latest
+docker run -p 3000:3000 \
+  -e AWS_REGION=your-aws-region \
+  -e AWS_ACCESS_KEY_ID=your-access-key \
+  -e AWS_SECRET_ACCESS_KEY=your-secret-key \
+  -e S3_BUCKET_NAME=your-bucket-name \
+  -e S3_ENDPOINT_URL=your-s3-endpoint-url \
+  -e NX_CACHE_ACCESS_TOKEN=your-secure-token \
+  ghcr.io/ikatsuba/nx-cache-server:latest
+```
+
+### Manual Installation
 
 1. Clone the repository:
 
