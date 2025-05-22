@@ -4,6 +4,8 @@ A Deno-based server implementation of the Nx Custom Self-Hosted Remote Cache
 specification. This server provides a caching layer for Nx build outputs using
 Amazon S3 as the storage backend.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/template/-bmO7p?referralCode=73cYCO)
+
 ## Overview
 
 This server implements the
