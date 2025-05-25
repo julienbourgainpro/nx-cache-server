@@ -63,10 +63,16 @@ const auth = () =>
     await next();
   });
 
-app.use(auth());
 app.use(logger());
 
-app.put('/v1/cache/:hash', async (c) => {
+app.get('/health', () => {
+  return new Response('OK', {
+    status: 200,
+    headers: { 'Content-Type': 'text/plain' },
+  });
+});
+
+app.put('/v1/cache/:hash', auth(), async (c) => {
   try {
     const hash = c.req.param('hash');
 
@@ -117,7 +123,7 @@ app.put('/v1/cache/:hash', async (c) => {
   }
 });
 
-app.get('/v1/cache/:hash', async (c) => {
+app.get('/v1/cache/:hash', auth(), async (c) => {
   try {
     const hash = c.req.param('hash');
 
