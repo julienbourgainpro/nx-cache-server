@@ -5,4 +5,4 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 COPY . .
 
-CMD ["node", "--loader", "tsx", "./src/index.ts"]
+CMD ["node", "--import", "tsx", "./src/index.ts"]
