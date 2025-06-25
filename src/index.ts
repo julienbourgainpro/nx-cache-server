@@ -1,6 +1,8 @@
 import { Hono } from 'hono';
 import { createMiddleware } from 'hono/factory';
 import { logger } from 'hono/logger';
+import { serve } from '@hono/node-server';
+import { fileURLToPath } from 'node:url';
 
 import {
   GetObjectCommand,
@@ -172,17 +174,20 @@ app.get('/v1/cache/:hash', auth(), async (c) => {
   }
 });
 
-if (import.meta.main) {
-  const port = parseInt(Deno.env.get('PORT') || '3000');
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const port = parseInt(process.env.PORT || '3000', 10);
   console.log(`Server running on port ${port}`);
 
-  Deno.serve({ port }, (req) =>
-    app.fetch(req, {
-      NX_CACHE_ACCESS_TOKEN: Deno.env.get('NX_CACHE_ACCESS_TOKEN'),
-      AWS_REGION: Deno.env.get('AWS_REGION') || 'us-east-1',
-      AWS_ACCESS_KEY_ID: Deno.env.get('AWS_ACCESS_KEY_ID'),
-      AWS_SECRET_ACCESS_KEY: Deno.env.get('AWS_SECRET_ACCESS_KEY'),
-      S3_BUCKET_NAME: Deno.env.get('S3_BUCKET_NAME') || 'nx-cloud',
-      S3_ENDPOINT_URL: Deno.env.get('S3_ENDPOINT_URL'),
-    }));
+  serve({
+    fetch: (req) =>
+      app.fetch(req, {
+        NX_CACHE_ACCESS_TOKEN: process.env.NX_CACHE_ACCESS_TOKEN,
+        AWS_REGION: process.env.AWS_REGION || 'us-east-1',
+        AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+        AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+        S3_BUCKET_NAME: process.env.S3_BUCKET_NAME || 'nx-cloud',
+        S3_ENDPOINT_URL: process.env.S3_ENDPOINT_URL,
+      }),
+    port,
+  });
 }
