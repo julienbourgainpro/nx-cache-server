@@ -18,32 +18,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Deno
-        uses: denoland/setup-deno@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          deno-version: v2.3.3
-      - name: Run lint
-        run: deno lint
-      - name: Run format check
-        run: deno fmt --check
+          node-version: 22
+      - name: Install dependencies
+        run: npm ci
   e2e:
     name: Test Job
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Deno
-        uses: denoland/setup-deno@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          deno-version: v2.3.3
+          node-version: 22
+      - name: Install dependencies
+        run: npm ci
       - name: Run MinIO
         run: |
           docker compose -f docker-compose.yml up -d
-          deno --no-lock -A npm:wait-on http://localhost:3000/health
+          npx wait-on http://localhost:3000/health
       - name: Run tests
         run: |
-          deno task test
-          deno task e2e
+          npm test
+          npm run e2e
       - name: Run MinIO down
         run: |
           docker compose down

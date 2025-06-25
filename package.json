@@ -1,0 +1,20 @@
+{
+  "name": "nx-cache-server",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node --import tsx ./src/index.ts",
+    "test": "node --import tsx --test ./src/index.test.ts",
+    "e2e": "node --import tsx --test ./e2e/e2e.test.ts",
+    "wait-for-bucket": "node --import tsx ./scripts/wait-for-bucket.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.779.0",
+    "@aws-sdk/s3-request-presigner": "^3.779.0",
+    "hono": "^4.7.5",
+    "@hono/node-server": "1.14.4"
+  },
+  "devDependencies": {
+    "tsx": "^4.6.2"
+  }
+}

@@ -1,7 +1,8 @@
-FROM denoland/deno:2.3.3
+FROM node:22
 
 WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
 COPY . .
-RUN deno install
 
-CMD ["deno", "task", "start"]
+CMD ["node", "--import", "tsx", "./src/index.ts"]
