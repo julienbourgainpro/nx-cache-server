@@ -1,0 +1,13 @@
+stages:
+  - test
+
+image: node:22
+
+before_script:
+  - corepack enable
+  - yarn install --frozen-lockfile
+
+unit_test:
+  stage: test
+  script:
+    - yarn test
