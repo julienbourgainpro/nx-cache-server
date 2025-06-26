@@ -1,6 +1,6 @@
 # Nx Custom Self-Hosted Remote Cache Server
 
-A Deno-based server implementation of the Nx Custom Self-Hosted Remote Cache
+A Node.js based server implementation of the Nx Custom Self-Hosted Remote Cache
 specification. This server provides a caching layer for Nx build outputs using
 Amazon S3 as the storage backend.
 
@@ -23,7 +23,7 @@ and provides a production-ready solution for self-hosting your Nx remote cache.
 
 ## Prerequisites
 
-- [Deno](https://deno.land/) installed on your system
+- [Node.js 22](https://nodejs.org/) installed on your system
 - S3 compatible storage
 
 ## Environment Variables
@@ -64,21 +64,22 @@ docker run -p 3000:3000 \
 
 ```bash
 git clone <repository-url>
-cd nx-cloud
+cd nx-cache-server
 ```
 
-2. Run docker compose to start the MinIO server:
+2. Install dependencies:
 
 ```bash
-docker compose up -d
+yarn install
 ```
+
 
 ## Running the Server
 
 Start the server with:
 
 ```bash
-deno task start
+yarn start
 ```
 
 ## Testing
@@ -86,14 +87,8 @@ deno task start
 Run the tests with:
 
 ```bash
-deno task test
-deno task e2e
+yarn test
 ```
-
-> **Note:** The tests assume that the MinIO server is running and that the
-> `nx-cloud` bucket exists. Be sure to run
-> `docker compose -f docker-compose.yml up s3 create_bucket_and_user -d` before
-> running the tests.
 
 ## Usage with Nx
 
