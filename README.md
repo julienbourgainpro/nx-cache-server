@@ -67,18 +67,19 @@ git clone <repository-url>
 cd nx-cloud
 ```
 
-2. Run docker compose to start the MinIO server:
+2. Install dependencies:
 
 ```bash
-docker compose up -d
+yarn install
 ```
+
 
 ## Running the Server
 
 Start the server with:
 
 ```bash
-npm start
+yarn start
 ```
 
 ## Testing
@@ -86,14 +87,11 @@ npm start
 Run the tests with:
 
 ```bash
-npm test
-npm run e2e
+yarn test
 ```
 
-> **Note:** The tests assume that the MinIO server is running and that the
-> `nx-cloud` bucket exists. Be sure to run
-> `docker compose -f docker-compose.yml up s3 create_bucket_and_user -d` before
-> running the tests.
+> **Note:** The tests assume that the MinIO server and the `nx-cloud` bucket
+> already exist before running the tests.
 
 ## Usage with Nx
 
